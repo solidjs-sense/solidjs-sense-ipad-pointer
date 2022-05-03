@@ -15,6 +15,7 @@ export const IpadPointer = (props: Partial<CProps> & { hideOriginCursor?: boolea
       transitionSpeed: 0.2,
       parallaxIndex: 10,
       hoverPadding: 6,
+      hideCursorOutside: false,
     },
     props,
   );
@@ -49,6 +50,7 @@ export const IpadPointer = (props: Partial<CProps> & { hideOriginCursor?: boolea
           width: `${defaultProps.radius}px`,
           left: 0,
           top: 0,
+          opacity: defaultProps.hideCursorOutside ? 0 : 1,
         }}
       ></div>
     </Portal>

@@ -3,4 +3,5 @@ export interface CProps {
   transitionSpeed: number;
   parallaxIndex: number;
   hoverPadding: number;
+  hideCursorOutside: boolean;
 }

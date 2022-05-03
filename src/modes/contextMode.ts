@@ -120,6 +120,12 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
       });
     } else {
       cursor.classList.add('ipad-pointer-active');
+      if (props.hideCursorOutside) {
+        gsap.to(cursor, {
+          duration: props.transitionSpeed,
+          opacity: 1,
+        });
+      }
     }
   };
 
@@ -138,6 +144,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
       scale: 1,
       backgroundImage: 'none',
       filter: 'blur(0px)',
+      opacity: props.hideCursorOutside ? 0 : 1,
     });
     if (cursorTarget) {
       gsap.to(cursorTarget, {
