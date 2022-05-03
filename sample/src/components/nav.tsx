@@ -20,7 +20,7 @@ export const Nav = () => {
         {t('usage')}
       </Link>
       <a
-        href="https://github.com/solidjs-sense/solidjs-sense-ipad-pointer/tree/main/sample"
+        href="https://github.com/solidjs-sense/solidjs-sense-ipad-pointer/tree/master/sample"
         data-ipad-pointer
         target="_blank"
       >
