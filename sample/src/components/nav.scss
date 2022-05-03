@@ -1,0 +1,71 @@
+.nav-ctn {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  height: 60px;
+  background: skyblue;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 8px;
+    height: 50px;
+  }
+
+  a {
+    border: none;
+    background: none;
+    height: 60px;
+    line-height: 60px;
+    color: #fff;
+    font-size: 1.6em;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 22px;
+    text-decoration: none;
+
+    @media screen and (max-width: 768px) {
+      padding: 0 12px;
+      height: 50px;
+      line-height: 50px;
+    }
+
+    &.active,
+    &:hover {
+      color: #333;
+      background: aliceblue;
+      text-decoration: underline;
+    }
+  }
+
+  .right {
+    flex: 1;
+    text-align: right;
+    height: 100%;
+
+    button {
+      padding: 0 22px;
+      background: transparent;
+      height: 60px;
+      line-height: 60px;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.88em;
+
+      @media screen and (max-width: 768px) {
+        padding: 0 12px;
+        height: 50px;
+        line-height: 50px;
+      }
+
+      &:hover {
+        color: #333;
+        background: aliceblue;
+      }
+    }
+  }
+}
