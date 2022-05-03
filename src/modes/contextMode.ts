@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { getMoveIndex, isElHasProperty, getStyleProp } from '../chunks';
 import propNames from '../propNames';
+import { CProps } from '../types';
 
 const contextMode = (cursor: HTMLElement, props: CProps) => {
   const parallaxSpeed = {
