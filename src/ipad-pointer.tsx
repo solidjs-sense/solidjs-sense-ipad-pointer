@@ -2,6 +2,7 @@ import { Portal } from 'solid-js/web';
 import { setStyles } from './chunks';
 import { mergeProps, onCleanup, onMount } from 'solid-js';
 import contextMode from './modes/contextMode';
+import { CProps } from './types';
 
 export const IpadPointer = (props: Partial<CProps> & { hideOriginCursor?: boolean }) => {
   let refCursor: HTMLDivElement | undefined;
