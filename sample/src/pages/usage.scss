@@ -65,4 +65,20 @@
       margin: 0;
     }
   }
+
+  .buttons {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+
+    button {
+      margin: 0 12px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      background-color: skyblue;
+      border: 0;
+      font-size: 18px;
+      color: #fff;
+    }
+  }
 }

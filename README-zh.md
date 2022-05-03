@@ -12,7 +12,12 @@
 import { IpadPointer } from 'solidjs-sense-ipad-pointer';
 
 const App: Component = () => {
-  ..
+  ...
+
+  <button data-ipad-pointer>Morph default</button>
+  <button data-ipad-pointer="lift">Lift</button>
+  <button data-ipad-pointer="noParallax">noParallax</button>
+  <button data-ipad-pointer="noPadding">noPadding</button>
 
   return (
     <>

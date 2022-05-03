@@ -11,6 +11,12 @@ export default () => {
   return (
     <div class="usage-ctn">
       <div class="content" innerHTML={md.render(location.base() === bases[0] ? readmeZh : readme)}></div>
+      <div class="buttons">
+        <button data-ipad-pointer>Morph default</button>
+        <button data-ipad-pointer="lift">lift</button>
+        <button data-ipad-pointer="noParallax">noParallax</button>
+        <button data-ipad-pointer="noPadding">noPadding</button>
+      </div>
     </div>
   );
 };
