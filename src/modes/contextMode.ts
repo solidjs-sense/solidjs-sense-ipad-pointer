@@ -127,6 +127,21 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
         });
       }
     }
+
+    // avoid cursorTarget to be removed
+    // and it should behavior as mouseleave at this situation
+    const checkCursorTargetExists = () => {
+      if (!isHovered || !cursorTarget) {
+        return;
+      }
+      if (cursorTarget && !document.contains(cursorTarget)) {
+        cursorTarget = undefined;
+        handleMouseOut(e);
+      }
+      requestAnimationFrame(checkCursorTargetExists);
+    };
+
+    checkCursorTargetExists();
   };
 
   const handleMouseOut = (e: MouseEvent) => {
