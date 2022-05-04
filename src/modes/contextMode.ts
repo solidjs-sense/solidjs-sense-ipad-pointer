@@ -26,18 +26,18 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
       if (isElHasProperty(cursorTarget, propNames.lift)) {
         gsap.to(cursorTarget, {
           duration: props.transitionSpeed,
-          x: getMoveIndex(
-            e.clientX,
-            cursorTarget.getBoundingClientRect().left,
-            cursorTarget.clientWidth,
-            parallaxSpeed.target,
-          ),
-          y: getMoveIndex(
-            e.clientY,
-            cursorTarget.getBoundingClientRect().top,
-            cursorTarget.clientHeight,
-            parallaxSpeed.target,
-          ),
+          x: getMoveIndex({
+            mouseEventDirection: e.clientX,
+            elPosition: cursorTarget.getBoundingClientRect().left,
+            elDimension: cursorTarget.clientWidth,
+            movementSpeed: parallaxSpeed.target,
+          }),
+          y: getMoveIndex({
+            mouseEventDirection: e.clientY,
+            elPosition: cursorTarget.getBoundingClientRect().top,
+            elDimension: cursorTarget.clientHeight,
+            movementSpeed: parallaxSpeed.target,
+          }),
           scale: 1.1,
           boxShadow: getStyleProp('--ghost-shadow'),
         });
@@ -86,18 +86,18 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
         if (!isElHasProperty(cursorTarget, propNames.noParallax)) {
           gsap.to(cursorTarget, {
             duration: props.transitionSpeed,
-            x: -getMoveIndex(
-              e.clientX,
-              cursorTarget.getBoundingClientRect().left,
-              cursorTarget.clientWidth,
-              parallaxSpeed.target,
-            ),
-            y: -getMoveIndex(
-              e.clientY,
-              cursorTarget.getBoundingClientRect().top,
-              cursorTarget.clientHeight,
-              parallaxSpeed.target,
-            ),
+            x: -getMoveIndex({
+              mouseEventDirection: e.clientX,
+              elPosition: cursorTarget.getBoundingClientRect().left,
+              elDimension: cursorTarget.clientWidth,
+              movementSpeed: parallaxSpeed.target,
+            }),
+            y: -getMoveIndex({
+              mouseEventDirection: e.clientY,
+              elPosition: cursorTarget.getBoundingClientRect().top,
+              elDimension: cursorTarget.clientHeight,
+              movementSpeed: parallaxSpeed.target,
+            }),
           });
         }
       }
@@ -128,7 +128,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
       }
     }
 
-    // avoid cursorTarget to be removed
+    // avoid cursorTarget to be removed before mouse leave
     // and it should behavior as mouseleave at this situation
     const checkCursorTargetExists = () => {
       if (!isHovered || !cursorTarget) {
@@ -172,12 +172,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     }
   };
 
-  // Event listeners
-  document.addEventListener('wheel', handleMouseOut);
-
-  document.addEventListener('mousemove', moveCursor);
-
-  const mouseEnter = (e: MouseEvent) => {
+  const handleMouseEnter = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     if (!isElHasProperty(target)) {
       return;
@@ -185,9 +180,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     handleMouseOver(e);
   };
 
-  document.addEventListener('mouseenter', mouseEnter, true);
-
-  const mouseLeave = (e: MouseEvent) => {
+  const handleMouseLeave = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     if (!isElHasProperty(target)) {
       return;
@@ -195,13 +188,18 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     handleMouseOut(e);
   };
 
-  document.addEventListener('mouseleave', mouseLeave, true);
+  // Event listeners
+  document.addEventListener('wheel', handleMouseOut);
+  document.addEventListener('mousemove', moveCursor);
+  document.addEventListener('mouseenter', handleMouseEnter, true);
+  document.addEventListener('mouseleave', handleMouseLeave, true);
 
   return () => {
+    cursorTarget = undefined;
     document.removeEventListener('wheel', handleMouseOut);
     document.removeEventListener('mousemove', moveCursor);
-    document.removeEventListener('mouseenter', mouseEnter, true);
-    document.removeEventListener('mouseleave', mouseLeave, true);
+    document.removeEventListener('mouseenter', handleMouseEnter, true);
+    document.removeEventListener('mouseleave', handleMouseLeave, true);
   };
 };
 
