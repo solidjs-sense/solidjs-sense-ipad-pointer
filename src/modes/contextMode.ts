@@ -10,6 +10,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
   };
   let isHovered = false;
   let cursorTarget: HTMLElement | undefined;
+  let cursorTargetStyle: Partial<CSSStyleDeclaration> | undefined;
 
   const moveCursor = (e: MouseEvent) => {
     // If element is not hovered
@@ -107,6 +108,10 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
   const handleMouseOver = (e: MouseEvent) => {
     isHovered = true;
     cursorTarget = e.target as HTMLElement;
+    cursorTargetStyle = cursorTarget && {
+      transform: cursorTarget.style.transform,
+      boxShadow: cursorTarget.style.boxShadow,
+    };
     const borderRadius = Number(window.getComputedStyle(cursorTarget).borderRadius.slice(0, -2) as any);
 
     if (isElHasProperty(cursorTarget, propNames.lift)) {
@@ -162,13 +167,25 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
       opacity: props.hideCursorOutside ? 0 : 1,
     });
     if (cursorTarget) {
-      gsap.to(cursorTarget, {
-        duration: props.transitionSpeed,
-        x: 0,
-        y: 0,
-        scale: 1,
-        boxShadow: '0 7px 15px rgba(0,0,0,0.0)',
-      });
+      // backup cursorTarget and cursorTargetStyle
+      // to reset style after animate complete
+      let cTarget: HTMLElement | undefined = cursorTarget;
+      const cTargetStyle = cursorTargetStyle;
+      gsap
+        .to(cTarget, {
+          duration: props.transitionSpeed,
+          x: 0,
+          y: 0,
+          scale: 1,
+          boxShadow: '0 7px 15px rgba(0,0,0,0.0)',
+        })
+        .eventCallback('onComplete', () => {
+          if (cTarget && cTargetStyle) {
+            cTarget.style.transform = cTargetStyle.transform || '';
+            cTarget.style.boxShadow = cTargetStyle.boxShadow || '';
+            cTarget = undefined;
+          }
+        });
     }
   };
 
@@ -182,7 +199,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
 
   const handleMouseLeave = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (!isElHasProperty(target)) {
+    if (!isElHasProperty(target) && !((target as any) === document)) {
       return;
     }
     handleMouseOut(e);
