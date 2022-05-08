@@ -107,11 +107,13 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
 
   const handleMouseOver = (e: MouseEvent) => {
     isHovered = true;
-    cursorTarget = e.target as HTMLElement;
-    cursorTargetStyle = cursorTarget && {
-      transform: cursorTarget.style.transform,
-      boxShadow: cursorTarget.style.boxShadow,
-    };
+    if (cursorTarget !== e.target) {
+      cursorTarget = e.target as HTMLElement;
+      cursorTargetStyle = cursorTarget && {
+        transform: cursorTarget.style.transform,
+        boxShadow: cursorTarget.style.boxShadow,
+      };
+    }
     const borderRadius = Number(window.getComputedStyle(cursorTarget).borderRadius.slice(0, -2) as any);
 
     if (isElHasProperty(cursorTarget, propNames.lift)) {
@@ -206,14 +208,12 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
   };
 
   // Event listeners
-  document.addEventListener('wheel', handleMouseOut);
   document.addEventListener('mousemove', moveCursor);
   document.addEventListener('mouseenter', handleMouseEnter, true);
   document.addEventListener('mouseleave', handleMouseLeave, true);
 
   return () => {
     cursorTarget = undefined;
-    document.removeEventListener('wheel', handleMouseOut);
     document.removeEventListener('mousemove', moveCursor);
     document.removeEventListener('mouseenter', handleMouseEnter, true);
     document.removeEventListener('mouseleave', handleMouseLeave, true);
