@@ -11,8 +11,13 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
   let isHovered = false;
   let cursorTarget: HTMLElement | undefined;
   let cursorTargetStyle: Partial<CSSStyleDeclaration> | undefined;
+  let cursorMoveX: number | undefined;
+  let cursorMoveY: number | undefined;
 
   const moveCursor = (e: MouseEvent) => {
+    cursorMoveX = e.clientX;
+    cursorMoveY = e.clientY;
+
     // If element is not hovered
     if (!isHovered) {
       return gsap.to(cursor, {
@@ -149,15 +154,15 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     checkCursorTargetExists();
   };
 
-  const handleMouseOut = (e: MouseEvent) => {
+  const handleMouseOut = (e?: MouseEvent) => {
     isHovered = false;
     cursor.classList.remove('ipad-pointer-active');
     cursor.classList.remove('ipad-pointer-lift-active');
 
     gsap.to(cursor, {
       duration: props.transitionSpeed,
-      x: e.clientX - props.radius / 2,
-      y: e.clientY - props.radius / 2,
+      x: (e?.clientX ?? cursorMoveX!) - props.radius / 2,
+      y: (e?.clientY ?? cursorMoveY!) - props.radius / 2,
       width: props.radius,
       height: props.radius,
       borderRadius: '100px',
@@ -189,6 +194,14 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     }
   };
 
+  const handleWheel = (e: WheelEvent) => {
+    const target = e.target as HTMLElement;
+    if (isElHasProperty(target)) {
+      return;
+    }
+    handleMouseOut(e);
+  };
+
   const handleMouseEnter = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     if (!isElHasProperty(target)) {
@@ -197,26 +210,34 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     handleMouseOver(e);
   };
 
-  const handleMouseLeave = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (!isElHasProperty(target) && !((target as any) === document)) {
-      return;
+  const handleMouseLeave = (e?: MouseEvent) => {
+    if (e) {
+      const target = e.target as HTMLElement;
+      if (!isElHasProperty(target) && !((target as any) === document)) {
+        return;
+      }
     }
     handleMouseOut(e);
   };
 
+  const handleWindowBlur = () => {
+    handleMouseOut();
+  };
+
   // Event listeners
-  document.addEventListener('wheel', handleMouseOut);
+  document.addEventListener('wheel', handleWheel);
   document.addEventListener('mousemove', moveCursor);
   document.addEventListener('mouseenter', handleMouseEnter, true);
   document.addEventListener('mouseleave', handleMouseLeave, true);
+  window.addEventListener('blur', handleWindowBlur);
 
   return () => {
     cursorTarget = undefined;
-    document.removeEventListener('wheel', handleMouseOut);
+    document.removeEventListener('wheel', handleWheel);
     document.removeEventListener('mousemove', moveCursor);
     document.removeEventListener('mouseenter', handleMouseEnter, true);
     document.removeEventListener('mouseleave', handleMouseLeave, true);
+    window.removeEventListener('blur', handleWindowBlur);
   };
 };
 
