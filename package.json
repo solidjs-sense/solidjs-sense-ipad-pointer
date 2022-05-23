@@ -40,6 +40,7 @@
   "license": "MIT",
   "scripts": {
     "start": "cd sample && vite",
+    "dev": "cd sample && vite --host",
     "build": "vite build",
     "build-sample": "NODE_ENV=production cd sample && vite build",
     "lint-ts": "eslint . --ext .ts,.tsx",

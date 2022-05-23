@@ -151,7 +151,7 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     checkCursorTargetExists();
   };
 
-  const handleMouseOut = (e: MouseEvent) => {
+  const handleMouseOut = (e: MouseEvent | PointerEvent) => {
     isHovered = false;
     cursor.classList.remove('ipad-pointer-active');
     cursor.classList.remove('ipad-pointer-lift-active');
@@ -207,16 +207,25 @@ const contextMode = (cursor: HTMLElement, props: CProps) => {
     handleMouseOut(e);
   };
 
+  const handlePointerDown = (e: PointerEvent) => {
+    const target = e.target as HTMLElement;
+    if (isHovered && !isElHasProperty(target) && cursorTarget && !cursorTarget.contains(target)) {
+      handleMouseOut(e);
+    }
+  };
+
   // Event listeners
   document.addEventListener('mousemove', moveCursor);
   document.addEventListener('mouseenter', handleMouseEnter, true);
   document.addEventListener('mouseleave', handleMouseLeave, true);
+  document.addEventListener('pointerdown', handlePointerDown, true);
 
   return () => {
     cursorTarget = undefined;
     document.removeEventListener('mousemove', moveCursor);
     document.removeEventListener('mouseenter', handleMouseEnter, true);
     document.removeEventListener('mouseleave', handleMouseLeave, true);
+    document.removeEventListener('pointerdown', handlePointerDown, true);
   };
 };
 
